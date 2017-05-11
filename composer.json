@@ -32,8 +32,7 @@
         },
         "classmap": [
             "src/database/migrations",
-            "src/database/seeds",
-            "tests"
+            "src/database/seeds"
         ]
     },
     "require-dev": {
