@@ -102,8 +102,8 @@ class DaisyconImportData extends Command
 
                         $program_id = $activeProgram->program->program_id;
                         $feed_id = $feed->feed_id;
-                        $custom_categorie = $activeProgram->custom_category;
-                        $this->data->importData($url, $program_id, $feed_id, $custom_categorie);
+                        $custom_category = $activeProgram->custom_category;
+                        $this->data->importData($url, $program_id, $feed_id, $custom_category);
                     }
                 } else {
                     $this->info('Geen feeds en/of programma\'s in de database gevonden...');
