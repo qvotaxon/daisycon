@@ -40,7 +40,10 @@ class LeagueCsvDataImport implements DataImportInterface
      */
     public function importData($url, $program_id, $feed_id, $custom_categorie)
     {
-        $fileLocation = storage_path() . '/' . $program_id . '.' . $feed_id . '.csv';
+        $fileLocation = storage_path() . DIRECTORY_SEPARATOR . $program_id . '.' . $feed_id . '.csv';
+	    $url = str_replace('#LOCALE_ID#', 1, $url);
+	    $url .= '&type=' . Config::get('daisycon.feed_type');//Set CSV
+//	    $url .= '&demo'; //Set demo
 
         $this->downloadAndSaveFeed($url, $fileLocation);
 
@@ -63,14 +66,11 @@ class LeagueCsvDataImport implements DataImportInterface
 
             $csv->setOffset($offset)->setLimit($batchAantal);
 
-            $this->console->writeln("Memory now at: " . memory_get_peak_usage());
-
             $csvResults = $csv->fetchAll(function ($row) use ($fields_wanted_from_config, $program_id, $feed_id, $custom_categorie, &$creationCount) {
-
-                if (count($row) != count($fields_wanted_from_config)) return;
+	            if (count($row) != count($fields_wanted_from_config)) return;
 
                 try {
-                    $inserted_array = array_merge(
+	                $inserted_array = array_merge(
                         array_combine(
                             $fields_wanted_from_config,
                             $row
@@ -81,6 +81,7 @@ class LeagueCsvDataImport implements DataImportInterface
                             'custom_categorie' => $custom_categorie
                         )
                     );
+
                     Data::create(
                         $inserted_array
                     );
@@ -95,12 +96,14 @@ class LeagueCsvDataImport implements DataImportInterface
             });
 
             $aantalResultaten = count($csvResults);
-            $this->console->writeln("Totaal verwerkt: " . $creationCount);
-            $offset += $aantalResultaten;
+            $this->console->writeln("Total processed: " . $creationCount);
+	        $this->console->writeln(" # of results: " . ($aantalResultaten - 1) . PHP_EOL);
 
+            $offset += $aantalResultaten;
 
             if ($aantalResultaten != $batchAantal) break; // forceer einde
 
+//	        echo json_encode($csvResults);
         }
 
         Data::where(function ($query) {
@@ -160,6 +163,9 @@ class LeagueCsvDataImport implements DataImportInterface
 //            CURLOPT_TIMEOUT        => 120,
             CURLOPT_USERAGENT => 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'
         ));
+
+	    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+	    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 
         $response = curl_exec($curl);
 

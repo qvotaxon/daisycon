@@ -11,11 +11,11 @@ use Illuminate\Support\Str;
 class DaisyconFixData extends Command {
 
 	/**
-	 * The name and signature of the console command.
+	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'daisycon:fix-data';
+	protected $name = 'daisycon:fix-data';
 
 	/**
 	 * The console command description.
@@ -26,6 +26,8 @@ class DaisyconFixData extends Command {
 
 	/**
 	 * Create a new command instance.
+	 *
+	 * @return void
 	 */
 	public function __construct()
 	{
@@ -37,7 +39,7 @@ class DaisyconFixData extends Command {
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function fire()
 	{
 		$this->info('Alle records aanvullen met gegevens welke ontbreken vanuit CSV-bestand');
 

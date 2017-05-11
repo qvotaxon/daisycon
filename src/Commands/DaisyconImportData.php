@@ -22,11 +22,11 @@ class DaisyconImportData extends Command
 {
 
     /**
-     * The name and signature of the console command.
+     * The console command name.
      *
      * @var string
      */
-    protected $signature = 'daisycon:import-data';
+    protected $name = 'daisycon:import-data';
 
     /**
      * The console command description.
@@ -57,11 +57,6 @@ class DaisyconImportData extends Command
     {
         parent::__construct();
         $this->data = $data;
-
-//        \DB::listen(function($query) {
-//            print_r($query->sql);
-//            print_r($query->bindings);
-//        });
     }
 
     protected function getProgramID()
@@ -79,7 +74,7 @@ class DaisyconImportData extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function fire()
     {
         $this->info('Truncate data table');
         Data::truncate();
@@ -95,18 +90,19 @@ class DaisyconImportData extends Command
                 if (!empty($activeProgram->program->feeds) || !empty($activeProgram->program->name)) {
                     foreach ($activeProgram->program->feeds as $feed) {
                         $this->info($activeProgram->program->name . ' - ' . $feed->name);
-//                        $url = $feed->{"feed_link_" . strtolower(Config::get('daisycon.feed_type', 'csv'))} .
-                        $url = $feed->url .
+                        $url = $feed->{"feed_link_" . strtolower(Config::get('daisycon.feed_type', 'csv'))} .
                             '&f=' . implode(';', $fields_wanted_from_config) .
                             '&encoding=' . Config::get("daisycon.encoding") .
                             '&general=true' .
                             '&nohtml=' . (Config::get("daisycon.accept_html", false) ? 'false' : 'true');
-                        $url = str_replace('#LOCALE_ID#', 1, $url);
-                        $this->info($url);
+//
+//                        echo PHP_EOL;
+//                        echo $url;
+//	                    echo PHP_EOL;
 
                         $program_id = $activeProgram->program->program_id;
                         $feed_id = $feed->feed_id;
-                        $custom_categorie = $activeProgram->custom_categorie;
+                        $custom_categorie = $activeProgram->custom_category;
                         $this->data->importData($url, $program_id, $feed_id, $custom_categorie);
                     }
                 } else {
@@ -115,10 +111,12 @@ class DaisyconImportData extends Command
                 }
             }
         } else {
-            return $this->info('Geen active programma\'s in de database gevonden...');
+            $this->info('Geen active programma\'s in de database gevonden...');
         }
 //        $this->call('daisycon:fix-data');
-        return $this->info('Verwerkt in ' . round(microtime(true) - LARAVEL_START, 2) . ' seconden');
+        $this->info('Verwerkt in ' . round(microtime(true) - LARAVEL_START, 2) . ' seconden');
+
+        return;
     }
 
     /**

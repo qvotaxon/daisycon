@@ -88,6 +88,9 @@ class CsvDataImport implements DataImportInterface {
             CURLOPT_USERAGENT      => 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)'
         ));
 
+	    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+	    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
         $response = curl_exec($curl);
 
         if($response === false) {

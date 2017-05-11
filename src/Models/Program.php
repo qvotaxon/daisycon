@@ -2,9 +2,7 @@
 
 namespace Bahjaat\Daisycon\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Program extends Model
+class Program extends \Eloquent
 {
     protected $fillable =
         [
@@ -27,25 +25,10 @@ class Program extends Model
     //    {
     //        return $this->belongsTo('Bahjaat\Daisycon\Models\ActiveProgram', 'program_id', 'program_id');
     //    }
-
-    protected $casts = [
-        'productfeed' => 'boolean'
-    ];
-
     public function feeds()
     {
         // return $this->belongsTo('Bahjaat\Daisycon\Models\Feed', 'program_id', 'program_id');
         return $this->hasMany(Feed::class, 'program_id', 'program_id');
-    }
-
-    public function setEnddateAttribute($enddate)
-    {
-        if ($enddate == "0000-00-00") unset($this->attributes['enddate']);
-    }
-
-    public function setProductfeedAttribute($productfeed)
-    {
-        $this->attributes['productfeed'] = ($productfeed == "true") ? true : false;
     }
 
 }

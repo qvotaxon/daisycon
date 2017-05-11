@@ -12,9 +12,9 @@ class CreateIndexToRegionOfDestinationField extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('data', function($table){
-			$table->index('region_of_destination');
-		});
+//		Schema::table('data', function($table){
+//			$table->index('region_of_destination');
+//		});
 	}
 
 
@@ -25,9 +25,9 @@ class CreateIndexToRegionOfDestinationField extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('data', function($table){
-			$table->dropIndex('data_region_of_destination_index');
-		});
+//		Schema::table('data', function($table){
+//			$table->dropIndex('data_region_of_destination_index');
+//		});
 	}
 
 }

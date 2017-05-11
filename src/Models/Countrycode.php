@@ -1,10 +1,8 @@
 <?php
-
 namespace Bahjaat\Daisycon\Models;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Countrycode extends Model {
+class Countrycode extends \Eloquent {
 	protected $fillable = [
 		'countrycode',
 		'country'

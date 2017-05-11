@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Edwin
+ * Date: 30-1-2015
+ * Time: 21:50
+ */
 
 namespace Bahjaat\Daisycon\Repository;
 
@@ -6,11 +12,6 @@ namespace Bahjaat\Daisycon\Repository;
 //use Prewk\XmlStringStreamer\Stream;
 //use Prewk\XmlStringStreamer\Parser;
 
-use Prewk\XmlStringStreamer;
-use Prewk\XmlStringStreamer\Stream;
-use Prewk\XmlStringStreamer\Parser;
-
-use Config;
 use GuzzleHttp\Client;
 use Bahjaat\Daisycon\Models\Data;
 use Bahjaat\Daisycon\Repository\DataImportInterface;
@@ -18,110 +19,41 @@ use Bahjaat\Daisycon\Repository\DataImportInterface;
 
 class XmlDataImport implements DataImportInterface {
 
-    public function importData($url, $program_id, $feed_id, $custom_category)
-    {
-//        $url = "http://example.com/really-large-xml-file.xml";
-
-        $CHUNK_SIZE = 1024;
-        $stream = new Stream\Guzzle($url, $CHUNK_SIZE);
-        $parser = new Parser\StringWalker([
-            "extractContainer" => true,
-        ]);
-
-//        $file = $url;
-//        $head = array_change_key_case(get_headers($url, TRUE));
-//        dd($head);
-//        $totalSize = $head['content-length'];
-
-//        $totalSize = filesize($file);
-
-// Construct the file stream
-//        $stream = new \File($file, 16384, function($chunk, $readBytes) use ($totalSize) {
-//             This closure will be called every time the streamer requests a new chunk of data from the XML file
-//            echo "Progress: $readBytes / $totalSize\n";
-//        });
-
-        $streamer = new XmlStringStreamer($parser, $stream);
-
-        // Get the containing XML
-//        $containingXml = $parser->getExtractedContainer();
-//dd($containingXml);
-//        $xmlObj = simplexml_load_string($containingXml);
-//        $rootElementName = $xmlObj->getName();
-//        $rootElementFooAttribute = $xmlObj->attributes()->foo;
-//        echo $rootElementName;
-//        echo $rootElementFooAttribute;
-//        dd();
-        while ($node = $streamer->getNode()) {
-
-            $xml = simplexml_load_string($node);
-            $rootNode = $xml->getName();
-
-            switch ($rootNode) {
-                case "info":
-//                    var_dump((string)$xml->xpath('/info/category')[0]);
-//                    var_dump((string)$xml->xpath('/info/sub_category')[0]);
-//
-                    break;
-                case "programs":
-                    echo ($rootNode);
-//                    var_dump($xml->asXml());
-                    var_dump($xml->xpath('/programs/program/program_info'));
-//                    dd();
-                    break;
-                default:
-                    echo ($rootNode);
-//                    dd($xml->asXml());
-            }
-        }
-        dd('stop');
-    }
-
     /**
      * Importeer data van betreffende feed (url) in de database
      *
      * @param $url
      * @param $program_id
      * @param $feed_id
-     * @param $custom_category
+     * @param $custom_categorie
      */
-    public function importData2($url, $program_id, $feed_id, $custom_category)
+    public function importData($url, $program_id, $feed_id, $custom_categorie)
     {
-        $client = new Client;
-        $response = $client->request('GET', $url, [
-            'headers' => ['Accept' => 'application/xml'],
-            'timeout' => 120
-        ]);
-        $body = $response->getBody()->getContents();
+        $client = new Client();
+        $response = $client->request('GET', $url, ['timeout' => 3]);
+        $body = $response->getBody();
         $simpleXmlString = simplexml_load_string($body, null, LIBXML_NOCDATA ); // LIBXML_NOCDATA-trick from: http://dissectionbydavid.wordpress.com/2013/01/25/simple-simplexml-to-array-in-php/
-        if ($simpleXmlString instanceof \SimpleXMLElement) :
-
-        $products = $simpleXmlString->xpath('/datafeed/programs/program/products/*/product_info');
-
-        foreach ($products as $simpleXmlNode) {
+        foreach ($simpleXmlString as $simpleXmlNode) :
+            // Lege values eruit filteren
             $arr = array_filter(
-                (array)$simpleXmlNode
+                (array) $simpleXmlNode
             );
-//            dd($arr);
             try {
-                // Merge 'program_id' in gegevens uit XML
+                 // Merge 'program_id' in gegevens uit XML
                 $inserted_array = array_merge($arr,
                     array(
-                        'program_id'       => $program_id,
-                        'feed_id'          => $feed_id,
-                        'custom_category' => $custom_category
+                        'program_id' => $program_id,
+                        'feed_id' => $feed_id,
+                        'custom_categorie' => $custom_categorie
                     )
                 );
-//                dd($inserted_array);
                 Data::create(
                     $inserted_array
                 );
             } catch (Exception $e) {
                 dd($e->getMessage());
             }
-        }
-
-        endif;
+        endforeach;
 
         return;
     }

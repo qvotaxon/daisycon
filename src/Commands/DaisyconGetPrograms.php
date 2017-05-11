@@ -11,11 +11,11 @@ class DaisyconGetPrograms extends Command
 {
 
     /**
-     * The name and signature of the console command.
+     * The console command name.
      *
      * @var string
      */
-    protected $signature = 'daisycon:get-programs';
+    protected $name = 'daisycon:get-programs';
 
     /**
      * The console command description.
@@ -26,8 +26,6 @@ class DaisyconGetPrograms extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -39,8 +37,9 @@ class DaisyconGetPrograms extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function fire()
     {
+
         $page = 1;
         $per_page = 50;
         $notLastPage = true;
@@ -88,6 +87,7 @@ class DaisyconGetPrograms extends Command
 
             if ($resultCount < $per_page) $notLastPage = false;
             $options['page'] = $page++;
+
         }
 
         $count = Program::all()->count();

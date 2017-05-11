@@ -11,30 +11,30 @@ class ActiveProgramTableSeeder extends Seeder
         ActiveProgram::truncate();
 
         $programs = [
-            43 => array('custom_categorie' => 'zomer'),
-            110 => array('custom_categorie' => 'zomer'),
-            170 => array('custom_categorie' => 'zomer'),
-            191 => array('custom_categorie' => 'zomer'),
-            192 => array('custom_categorie' => ''),
-            387 => array('custom_categorie' => 'eindhoven'),
-            388 => array('custom_categorie' => 'maastricht'),
-            389 => array('custom_categorie' => 'rotterdam'),
-            390 => array('custom_categorie' => 'eelde'),
-            470 => array('custom_categorie' => ''),
-            694 => array('custom_categorie' => 'zomer'),
-            764 => array('custom_categorie' => 'zomer'),
-            864 => array('custom_categorie' => 'zomer'),
-            1571 => array('custom_categorie' => 'brussel'),
-            1572 => array('custom_categorie' => 'dusseldorf'),
-            2929 => array('custom_categorie' => 'schiphol'),
-            3663 => array('custom_categorie' => 'zomer')
+	        692 => array('custom_category' => 'Interhome NL'),
+	        683 => array('custom_category' => 'Tsjechoreizen'),
+//            170 => array('custom_category' => 'zomer'),
+//            191 => array('custom_category' => 'zomer'),
+//            192 => array('custom_category' => ''),
+//            387 => array('custom_category' => 'eindhoven'),
+//            388 => array('custom_category' => 'maastricht'),
+//            389 => array('custom_category' => 'rotterdam'),
+//            390 => array('custom_category' => 'eelde'),
+//            470 => array('custom_category' => ''),
+//            694 => array('custom_category' => 'zomer'),
+//            764 => array('custom_category' => 'zomer'),
+//            864 => array('custom_category' => 'zomer'),
+//            1571 => array('custom_category' => 'brussel'),
+//            1572 => array('custom_category' => 'dusseldorf'),
+//            2929 => array('custom_category' => 'schiphol'),
+//            3663 => array('custom_category' => 'zomer')
         ];
 
         foreach ($programs as $program => $attr) {
             ActiveProgram::create([
                 'program_id' => $program,
                 'status' => 1,
-                'custom_categorie' => $attr['custom_categorie']
+                'custom_category' => $attr['custom_category']
             ]);
         }
 

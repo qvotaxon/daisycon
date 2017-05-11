@@ -18,11 +18,11 @@ use Bahjaat\Daisycon\Models\Subscription as Subscription;
 class DaisyconGetSubscriptions extends Command {
 
 	/**
-	 * The name and signature of the console command.
+	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'daisycon:get-subscriptions';
+	protected $name = 'daisycon:get-subscriptions';
 
 	/**
 	 * The console command description.
@@ -44,7 +44,7 @@ class DaisyconGetSubscriptions extends Command {
 	 *
 	 * @return mixed
 	 */
-	public function handle()
+	public function fire()
 	{
 		$this->info('Start importing subscriptions');
 

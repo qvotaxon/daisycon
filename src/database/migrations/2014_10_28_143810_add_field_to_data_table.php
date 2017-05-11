@@ -14,7 +14,7 @@ class AddFieldToDataTable extends Migration {
 	{
 		Schema::table('data', function(Blueprint $table)
 		{
-            $table->string('custom_category')->nullable()->after('update_hash');
+            $table->string('custom_category')->nullable();//->after('update_hash');
         });
 	}
 

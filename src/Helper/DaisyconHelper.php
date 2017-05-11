@@ -1,15 +1,15 @@
 <?php namespace Bahjaat\Daisycon\Helper;
 
-use App;
-use Config;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Config;
+use App;
 
 
 class DaisyconHelper
 {
 
-    /*static function getApiOptions()
+    static function getApiOptions()
     {
         $options = array(
             'login' => Config::get("daisycon.username"),
@@ -20,7 +20,7 @@ class DaisyconHelper
             'cache_wsdl' => WSDL_CACHE_NONE // WSDL_CACHE_DISK / WSDL_CACHE_NONE
         );
         return $options;
-    }*/
+    }
 
     static function getDatabaseFieldsToImport()
     {
@@ -40,8 +40,7 @@ class DaisyconHelper
      *
      * @param null $resourceUrl
      * @param array $options
-     *
-     * @return array
+     * @return void
      */
     static function getRestAPI($resourceUrl = null, $options = [])
     {
@@ -62,7 +61,7 @@ class DaisyconHelper
             'timeout' => $timeout,
             'auth' => [$username, $password, 'basic'],
             'query' => $options,
-            'verify' => App::environment() == 'local' ? true : false,
+            'verify' => App::environment() == 'local' ? false : false,
             'debug' => App::environment() == 'local' ? true : false,
         ]);
 

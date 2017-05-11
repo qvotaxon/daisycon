@@ -1,12 +1,12 @@
 <?php
 namespace Bahjaat\Daisycon\Models;
 
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Bahjaat\Daisycon\Helper\DaisyconHelper;
 use Config;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Bahjaat\Daisycon\Helper\DaisyconHelper;
 
-class Data extends Model
+class Data extends \Eloquent
 {
     protected $fillable = []; // see constructor
     // protected $guarded = ['link'];
@@ -19,12 +19,7 @@ class Data extends Model
         // $db_fields_to_import = DaisyconHelper::db_fields_to_import();
         // $custom_db_fields_to_import = Config::get('daisycon.custom_db_fields_to_import');
 
-        $this->fillable(
-            array_merge(
-                DaisyconHelper::getDatabaseFields(),
-                array('program_id', 'feed_id', 'custom_category')
-            )
-        );
+        $this->fillable(array_merge(DaisyconHelper::getDatabaseFields(), array('program_id', 'feed_id', 'custom_category')));
         parent::__construct($attributes);
     }
 
@@ -109,19 +104,20 @@ class Data extends Model
 
     public function fixBoardingType($data)
     {
-        $boardArr = array(
-            'LG' => 'Logies',
-            'LO' => 'Logies en ontbijt',
-            'AI' => 'All inclusive',
-            'HP' => 'Halfpension',
-            'VP' => 'Volpension'
-        );
-        if (isset($data->board_type)) {
-            if (array_key_exists($data->board_type, $boardArr)) {
-                $data->board_type = $boardArr[$data->board_type];
-            }
-        }
-        $data->board_type = ucfirst($data->board_type); // logies >> Logies
+    	//TODO: FIX THIS SHIT
+//        $boardArr = array(
+//            'LG' => 'Logies',
+//            'LO' => 'Logies en ontbijt',
+//            'AI' => 'All inclusive',
+//            'HP' => 'Halfpension',
+//            'VP' => 'Volpension'
+//        );
+//        if (isset($data->board_type)) {
+//            if (array_key_exists($data->board_type, $boardArr)) {
+//                $data->board_type = $boardArr[$data->board_type];
+//            }
+//        }
+//        $data->board_type = ucfirst($data->board_type); // logies >> Logies
         return $data;
     }
 
@@ -174,13 +170,13 @@ class Data extends Model
     public function fixDescription($data)
     {
         if (isset($data->description)) {
-
-            // Init new Description
+            // Init newDesc
             $newDesc = trim($data->description);
 
-            // Fill empty description with title
+            // Lege desc opvullen met title
             if (strlen($newDesc) <= 0) {
                 $newDesc = trim($data->title);
+                //die ($newDesc);
             }
 
             // Laat niet '...' zien aan 't einde. Zoek in laatste zin 'punt' of 'komma' en sluit daar netjes af.
@@ -196,8 +192,7 @@ class Data extends Model
             }
 
             // Sluit zin netjes af.
-            // Alleen als description gevuld is
-            if (preg_match('/[^\.\?\!]$/', $newDesc) && strlen($data->description) > 0) {
+            if (preg_match('/[^\.\?\!]$/', $newDesc)) {
                 $newDesc .= '.';
             }
 
@@ -218,7 +213,7 @@ class Data extends Model
             asdfasdf' - Ingrid, inkoopagent Zeeland.
             older.” - Ingrid, inkoopagent Zeeland.
             */
-//            $newDesc = preg_replace("/([\”\'\’\"\”])\s?[-–]?\s?[a-zA-Z -']+[, -–]+\sinkoopagent([a-zA-Z -']+)?.?/mi", '$1', $newDesc);
+            $newDesc = preg_replace("/([\”\'\’\"\”])\s?[-–]?\s?[a-zA-Z -']+[, -–]+\sinkoopagent([a-zA-Z -']+)?.?/mi", '$1', $newDesc);
 
             $data->description = $newDesc;
         }
@@ -253,7 +248,7 @@ class Data extends Model
                 $diff = $start->diff($einde);
                 //echo $diff->format('%R'); // use for point out relation: smaller/greater
                 //echo $diff->days;
-                $data->duration = ($diff->days); // + 1);
+                $data->duration = ($diff->days + 1);
             } else {
                 $data->duration = '';
             }
