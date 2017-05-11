@@ -1,5 +1,5 @@
 {
-    "name": "bahjaat/daisycon",
+    "name": "qvotaxon/daisycon",
     "description": "Laravel package to import data via Daisycon Rest API (affiliates)",
     "keywords": [
         "laravel",
@@ -10,6 +10,9 @@
         {
             "name": "Edwin Heij",
             "email": "bahjaat@gmail.com"
+        },{
+            "name": "Jordy Vervloed",
+            "email": "jordy.vervloed@gmail.com"
         }
     ],
     "require": {
