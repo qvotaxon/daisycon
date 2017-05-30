@@ -103,6 +103,8 @@ class DaisyconImportData extends Command
                         $program_id = $activeProgram->program->program_id;
                         $feed_id = $feed->feed_id;
                         $custom_category = $activeProgram->custom_category;
+
+	                    $this->info('Starting import of data row');
                         $this->data->importData($url, $program_id, $feed_id, $custom_category);
                     }
                 } else {
