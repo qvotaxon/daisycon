@@ -76,8 +76,6 @@ class LeagueCsvDataImport implements DataImportInterface
 	            if (count($row) != count($fields_wanted_from_config)) return;
 
                 try {
-//                	$this->console->writeln('EntityManager isNull: ' . is_null($this->entityManager));
-
 	                $inserted_array = array_merge(
                         array_combine(
                             $fields_wanted_from_config,
@@ -89,66 +87,6 @@ class LeagueCsvDataImport implements DataImportInterface
                             'custom_category' => $custom_categorie
                         )
                     );
-
-	                $destinationCountry = $this->entityManager
-		                ->getRepository('App\Entities\Countrycodes')
-		                ->createQueryBuilder('o')
-		                ->select('o')
-		                ->where('o.countrycode = :countryCode')
-		                ->setParameter('countryCode', $inserted_array['destination_country'])
-		                ->setMaxResults(1)
-		                ->getQuery()
-		                ->getResult()[0];
-
-//	                $currency = $this->entityManager
-//		                ->getRepository('App\Entities\Currency')
-//		                ->createQueryBuilder('o')
-//		                ->select('o')
-//		                ->where('o.code = :currencyCode')
-//		                ->setParameter('currencyCode', $inserted_array['currency'])
-//		                ->setMaxResults(1)
-//		                ->getQuery()
-//		                ->getResult()[0];
-
-//	                $currency = new Entities\Currency();
-//	                $currency->setName($inserted_array['currency']);
-//	                $currency->setSymbol($inserted_array['currency_symbol']);
-
-	                $daisyCon = new Entities\DaisyCon();
-	                $daisyCon->setLastModified($inserted_array['last_modified']);
-	                $daisyCon->setDaisyconUniqueIdSince($inserted_array['daisycon_unique_id_since']);
-	                $daisyCon->setDaisyconUniqueIdModified($inserted_array['daisycon_unique_id_modified']);
-	                $daisyCon->setDaisyconUniqueId($inserted_array['daisycon_unique_id']);
-	                $daisyCon->setPreviousDaisyconUniqueId($inserted_array['previous_daisycon_unique_id']);
-	                $daisyCon->setDataHash($inserted_array['data_hash']);
-	                $daisyCon->setInsertDate($inserted_array['insert_date']);
-	                $daisyCon->setUpdateDate($inserted_array['update_date']);
-	                $daisyCon->setDeleteDate($inserted_array['delete_date']);
-	                $daisyCon->setProgramId($inserted_array['program_id']);
-	                $daisyCon->setFeedId($inserted_array['feed_id']);
-	                $daisyCon->setCustomCategory($inserted_array['custom_category']);
-
-	                $destination = new Entities\Destination();
-	                $destination->setDestinationZipcode($inserted_array['destination_zipcode']);
-	                $destination->setDestinationCity($inserted_array['destination_city']);
-	                $destination->setDestinationRegion($inserted_array['destination_region']);
-	                $destination->setDestinationContinent($inserted_array['destination_continent']);
-	                $destination->setDestinationCountry($inserted_array['destination_country']);
-	                $destination->setDestinationCountryDescription($inserted_array['destination_country_description']);
-	                $destination->setDestinationLanguage($inserted_array['destination_language']);
-	                $destination->setDestinationLocationDescription($inserted_array['destination_location_description']);
-	                $destination->setDestinationPort($inserted_array['destination_port']);
-	                $destination->setDestinationRegionLink($inserted_array['destination_region_link']);
-	                $destination->setDestinationCityLink($inserted_array['destination_city_link']);
-	                $destination->setDestinationCountryLink($inserted_array['destination_country_link']);
-	                $destination->setDestinationLatitude($inserted_array['destination_latitude']);
-	                $destination->setDestinationLongitude($inserted_array['destination_longitude']);
-	                $destination->setDestinationCountryName($destinationCountry);
-
-	                $accommodationImage = new Entities\AccommodationImage();
-	                $accommodationImage->setImageSmall($inserted_array['image_small']);
-	                $accommodationImage->setImageMedium($inserted_array['image_medium']);
-	                $accommodationImage->setImageLarge($inserted_array['image_large']);
 
 	                $accommodation = new Entities\Accommodation();
 	                $accommodation->setId($inserted_array['id']);
@@ -168,6 +106,52 @@ class LeagueCsvDataImport implements DataImportInterface
 	                $accommodation->setSize($inserted_array['size']);
 	                $accommodation->setSizeDescription($inserted_array['size_description']);
 	                $accommodation->setEan(intval($inserted_array['ean']));
+
+	                $daisyCon = new Entities\DaisyCon();
+	                $daisyCon->setLastModified($inserted_array['last_modified']);
+	                $daisyCon->setDaisyconUniqueIdSince($inserted_array['daisycon_unique_id_since']);
+	                $daisyCon->setDaisyconUniqueIdModified($inserted_array['daisycon_unique_id_modified']);
+	                $daisyCon->setDaisyconUniqueId($inserted_array['daisycon_unique_id']);
+	                $daisyCon->setPreviousDaisyconUniqueId($inserted_array['previous_daisycon_unique_id']);
+	                $daisyCon->setDataHash($inserted_array['data_hash']);
+	                $daisyCon->setInsertDate($inserted_array['insert_date']);
+	                $daisyCon->setUpdateDate($inserted_array['update_date']);
+	                $daisyCon->setDeleteDate($inserted_array['delete_date']);
+	                $daisyCon->setProgramId($inserted_array['program_id']);
+	                $daisyCon->setFeedId($inserted_array['feed_id']);
+	                $daisyCon->setCustomCategory($inserted_array['custom_category']);
+	                $daisyCon->setAccommodation($accommodation);
+
+	                $destinationCountry = $this->entityManager
+		                ->getRepository('App\Entities\Country')
+		                ->createQueryBuilder('o')
+		                ->select('o')
+		                ->where('o.alpha2Code = :countryCode')
+		                ->setParameter('countryCode', $inserted_array['destination_country'])
+		                ->setMaxResults(1)
+		                ->getQuery()
+		                ->getSingleResult();
+
+	                $region = $this->getRegion($inserted_array['destination_region']);
+	                $destination = new Entities\Destination();
+	                $destination->setDestinationZipcode($inserted_array['destination_zipcode']);
+	                $destination->setDestinationCity($inserted_array['destination_city']);
+	                $destination->setDestinationContinent($inserted_array['destination_continent']);
+	                $destination->setDestinationCountry($destinationCountry);
+	                $destination->setDestinationLanguage($inserted_array['destination_language']);
+	                $destination->setDestinationLocationDescription($inserted_array['destination_location_description']);
+	                $destination->setDestinationPort($inserted_array['destination_port']);
+	                $destination->setDestinationCityLink($inserted_array['destination_city_link']);
+	                $destination->setDestinationLatitude($inserted_array['destination_latitude']);
+	                $destination->setDestinationLongitude($inserted_array['destination_longitude']);
+	                $destination->setAccommodation($accommodation);
+	                $destination->setRegion($region);
+
+	                $accommodationImage = new Entities\AccommodationImage();
+	                $accommodationImage->setImageSmall($inserted_array['image_small']);
+	                $accommodationImage->setImageMedium($inserted_array['image_medium']);
+	                $accommodationImage->setImageLarge($inserted_array['image_large']);
+	                $accommodationImage->setAccommodation($accommodation);
 
 	                $accommodationSpecs = new Entities\AccommodationSpecs();
 	                $accommodationSpecs->setStatus($inserted_array['status']);
@@ -253,7 +237,7 @@ class LeagueCsvDataImport implements DataImportInterface
 	                }
 
 //					$this->entityManager->persist($currency);
-					$this->entityManager->persist($destinationCountry);
+//					$this->entityManager->persist($destinationCountry);
 					$this->entityManager->persist($daisyCon);
 					$this->entityManager->persist($accommodationSpecs);
 					$this->entityManager->persist($destination);
@@ -262,7 +246,8 @@ class LeagueCsvDataImport implements DataImportInterface
 
 //	                $this->console->writeln("flushing");
 
-	                if($creationCount % 5 == 0) {
+	                if($creationCount % 250 == 0) {
+		                $this->console->writeln("flushing 250");
 		                $this->entityManager->flush();
 	                }
 
@@ -284,7 +269,6 @@ class LeagueCsvDataImport implements DataImportInterface
 
             $aantalResultaten = count($csvResults);
             $this->console->writeln("Total processed: " . $creationCount);
-	        $this->console->writeln(" # of results: " . ($aantalResultaten - 1) . PHP_EOL);
 
             $offset += $aantalResultaten;
 
@@ -363,5 +347,30 @@ class LeagueCsvDataImport implements DataImportInterface
         return $response;
     }
 
+	private function getRegion( $destination_region ) {
+		//Check if destination region exists
+//		$region =  $this->entityManager
+//			->find('App\Entities\Region', $destination_region);
+		$region = $this->entityManager
+			->getRepository('App\Entities\Region')
+			->createQueryBuilder('o')
+			->select('o')
+			->where('o.r_id = :region')
+			->setParameter('region', $destination_region)
+			->setMaxResults(1)
+			->getQuery()
+			->getResult();
 
+		if(count($region) > 0) {
+			return $region[0];
+		}
+
+		$region = new Entities\Region();
+		$region->setRId($destination_region);
+
+		$this->entityManager->persist($region);
+		$this->entityManager->flush();
+
+		return $region;
+	}
 }

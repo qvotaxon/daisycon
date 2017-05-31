@@ -12,10 +12,14 @@ use Prewk\XmlStringStreamer\Stream;
 
 class CountrycodesTableSeeder extends Seeder {
 
+	private $entityManager;
+
 	public function run()
 	{
 
-		Countrycode::truncate();
+		$this->entityManager = \App::make('Doctrine\ORM\EntityManagerInterface');
+
+//		Countrycode::truncate();
 
 		$CHUNK_SIZE = 1024;
 		$streamProvider = new Stream\File(dirname(__FILE__) . "/countrycodes.xml", $CHUNK_SIZE);
@@ -28,12 +32,15 @@ class CountrycodesTableSeeder extends Seeder {
         $streamer = new XmlStringStreamer($parser, $streamProvider);
 
 		while ($node = $streamer->getNode()) {
+			$country = new App\Entities\Country();
 		    $simpleXmlNode = simplexml_load_string($node);
-			Countrycode::create([
-				'countrycode' => $simpleXmlNode->field[0],
-				'country' => $simpleXmlNode->field[1]
-			]);
+			$country->setAlpha2Code($simpleXmlNode->field[0]);
+			$country->setName($simpleXmlNode->field[1]);
+
+			$this->entityManager->persist($country);
 		}
+
+		$this->entityManager->flush();
 
 		$this->command->info('Countrycode table seeded!');
 	}
