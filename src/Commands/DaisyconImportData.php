@@ -76,8 +76,8 @@ class DaisyconImportData extends Command
      */
     public function fire()
     {
-        $this->info('Truncate data table');
-        Data::truncate();
+//        $this->info('Truncate data table');
+//        Data::truncate();
 
         $this->info('Searching for feeds');
 
