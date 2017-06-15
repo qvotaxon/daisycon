@@ -16,7 +16,7 @@ class CsvDataImport implements DataImportInterface {
     /**
      *
      */
-    public function importData($url, $program_id, $feed_id, $custom_categorie)
+    public function importData($url, $program_id, $feed_id, $custom_category)
     {
         $fileLocation = storage_path() . '/'.$program_id.'.'.$feed_id.'.csv';
 
@@ -24,7 +24,7 @@ class CsvDataImport implements DataImportInterface {
         $this->filterBestand($fileLocation);
 
         $chunkSize = Config::get('daisycon.chunksize', 500);
-        Excel::filter('chunk')->load($fileLocation)->chunk($chunkSize, function($results) use ($program_id, $feed_id, $custom_categorie)
+        Excel::filter('chunk')->load($fileLocation)->chunk($chunkSize, function($results) use ($program_id, $feed_id, $custom_category)
         {
 
             foreach($results as $row)
@@ -44,7 +44,7 @@ class CsvDataImport implements DataImportInterface {
                         array(
                             'program_id' => $program_id,
                             'feed_id' => $feed_id,
-                            'custom_categorie' => $custom_categorie
+                            'custom_categorie' => $custom_category
                         )
                     );
                     Data::create(

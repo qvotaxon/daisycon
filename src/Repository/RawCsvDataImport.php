@@ -18,7 +18,7 @@ use DB;
 
 class RawCsvDataImport implements DataImportInterface {
 
-	public function importData( $url, $program_id, $feed_id, $custom_categorie ) {
+	public function importData( $url, $program_id, $feed_id, $custom_category ) {
 //		$fileLocation = storage_path() . '/' . $program_id . '.' . $feed_id . '.csv';
 //		$response     = $this->downloadAndSaveFeed( $url, $fileLocation );
 //

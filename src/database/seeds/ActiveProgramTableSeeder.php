@@ -11,8 +11,11 @@ class ActiveProgramTableSeeder extends Seeder
         ActiveProgram::truncate();
 
         $programs = [
+//	        10864 => array('custom_category' => 'Gogetaway'),
+//	        10722 => array('custom_category' => 'Hotelkamerveiling'),
 	        692 => array('custom_category' => 'Interhome NL'),
-	        683 => array('custom_category' => 'Tsjechoreizen'),
+//	        3681 => array('custom_category' => 'Texel.nl'),
+//	        683 => array('custom_category' => 'Tsjechoreizen'),
 //            170 => array('custom_category' => 'zomer'),
 //            191 => array('custom_category' => 'zomer'),
 //            192 => array('custom_category' => ''),
@@ -28,6 +31,7 @@ class ActiveProgramTableSeeder extends Seeder
 //            1572 => array('custom_category' => 'dusseldorf'),
 //            2929 => array('custom_category' => 'schiphol'),
 //            3663 => array('custom_category' => 'zomer')
+//	        3681 => array('custom_category' => 'Texel.net'),
         ];
 
         foreach ($programs as $program => $attr) {

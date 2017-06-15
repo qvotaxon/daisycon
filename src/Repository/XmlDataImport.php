@@ -25,9 +25,9 @@ class XmlDataImport implements DataImportInterface {
      * @param $url
      * @param $program_id
      * @param $feed_id
-     * @param $custom_categorie
+     * @param $custom_category
      */
-    public function importData($url, $program_id, $feed_id, $custom_categorie)
+    public function importData($url, $program_id, $feed_id, $custom_category)
     {
         $client = new Client();
         $response = $client->request('GET', $url, ['timeout' => 3]);
@@ -44,7 +44,7 @@ class XmlDataImport implements DataImportInterface {
                     array(
                         'program_id' => $program_id,
                         'feed_id' => $feed_id,
-                        'custom_categorie' => $custom_categorie
+                        'custom_categorie' => $custom_category
                     )
                 );
                 Data::create(
